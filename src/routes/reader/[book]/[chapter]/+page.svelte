@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { addVocab, loadVocab, removeVocab } from '$lib/vocab';
+  import { parseMorphCode } from '$lib/morph';
 
   export let data;
 
@@ -77,6 +78,8 @@
   $: pinnedLemma = pinnedToken ? lemmaById[pinnedToken.lemmaId] : null;
   $: hoveredGloss = hoveredToken?.gloss?.trim() || null;
   $: pinnedGloss = pinnedToken?.gloss?.trim() || null;
+  $: hoveredMorph = hoveredToken ? parseMorphCode(hoveredToken.morphCode) : null;
+  $: pinnedMorph = pinnedToken ? parseMorphCode(pinnedToken.morphCode) : null;
 </script>
 
 <section class="grid gap-8 lg:grid-cols-[2.5fr,1fr]">
@@ -148,7 +151,11 @@
           <p class="font-greek text-2xl text-stone-900">{hoveredToken.surface}</p>
           <p class="text-stone-600">Lemma: {hoveredLemma?.headword}</p>
           <p class="text-stone-600">Gloss (short): {hoveredGloss ?? '—'}</p>
-          <p class="text-stone-600">Parsing: {hoveredToken.morphCode}</p>
+          <p class="text-stone-600">Parsing: {hoveredMorph?.pos}</p>
+          {#if hoveredMorph?.features?.length}
+            <p class="text-xs text-stone-500">{hoveredMorph.features.join(' • ')}</p>
+          {/if}
+          <p class="text-xs text-stone-400">Code: {hoveredMorph?.raw}</p>
         </div>
       {:else}
         <p class="mt-3 text-sm text-stone-500">Hover a token to preview.</p>
@@ -162,7 +169,11 @@
           <p class="font-greek text-2xl text-stone-900">{pinnedToken.surface}</p>
           <p class="text-stone-700">Lemma: {pinnedLemma?.headword}</p>
           <p class="text-stone-700">Gloss (short): {pinnedGloss ?? '—'}</p>
-          <p class="text-stone-700">Parsing: {pinnedToken.morphCode}</p>
+          <p class="text-stone-700">Parsing: {pinnedMorph?.pos}</p>
+          {#if pinnedMorph?.features?.length}
+            <p class="text-xs text-stone-600">{pinnedMorph.features.join(' • ')}</p>
+          {/if}
+          <p class="text-xs text-stone-500">Code: {pinnedMorph?.raw}</p>
           <button
             class="mt-2 rounded-full bg-stone-900 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white"
             type="button"
