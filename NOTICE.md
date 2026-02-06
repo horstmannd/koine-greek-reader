@@ -17,4 +17,10 @@ This project includes data from the following sources:
 - Source: https://github.com/morphgnt/morphological-lexicon
 - This project uses lemma glosses from the lexicon for short gloss display.
 
+## unfoldingWord Greek Grammar (UGG)
+- License: Creative Commons Attribution-ShareAlike 4.0 (CC BY-SA 4.0)
+- Source: https://ugg.readthedocs.io/en/latest/
+- This project adapts and summarizes UGG paradigms and grammar explanations.
+- Original work available at: https://unfoldingword.org/ugg/
+
 If you redistribute this project or its data, you must comply with the licenses above.

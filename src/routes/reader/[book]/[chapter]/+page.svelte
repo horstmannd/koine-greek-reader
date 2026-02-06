@@ -174,6 +174,22 @@
             <p class="text-xs text-stone-600">{pinnedMorph.features.join(' • ')}</p>
           {/if}
           <p class="text-xs text-stone-500">Code: {pinnedMorph?.raw}</p>
+          {#if pinnedMorph?.explanations?.length}
+            <div class="mt-3 rounded-2xl border border-amber-200 bg-white/80 p-3 text-xs text-stone-600">
+              <p class="text-[10px] uppercase tracking-[0.3em] text-amber-700">Explain</p>
+              <div class="mt-2 space-y-2">
+                {#each pinnedMorph.explanations as explanation}
+                  <div>
+                    <span class="font-semibold text-stone-800">{explanation.label}:</span>
+                    <span class="ml-1">{explanation.definition}</span>
+                  </div>
+                {/each}
+              </div>
+              <a class="mt-3 inline-block text-[11px] uppercase tracking-widest text-amber-700" href="/grammar">
+                Open Grammar Reference
+              </a>
+            </div>
+          {/if}
           <button
             class="mt-2 rounded-full bg-stone-900 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white"
             type="button"

@@ -19,6 +19,7 @@
       <nav class="flex gap-6 text-sm text-stone-600">
         <a class="hover:text-stone-900" href="/reader/1john/1">Reader</a>
         <a class="hover:text-stone-900" href="/search">Search</a>
+        <a class="hover:text-stone-900" href="/grammar">Grammar</a>
         <a class="hover:text-stone-900" href="/about">About</a>
       </nav>
     </div>

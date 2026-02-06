@@ -9,6 +9,9 @@
     Morphology data is sourced from MorphGNT SBLGNT (CC BY-SA 4.0).
   </p>
   <p class="mt-3 text-sm text-stone-600">
+    Grammar tables and explanations adapted from the unfoldingWord Greek Grammar (UGG) (CC BY-SA 4.0).
+  </p>
+  <p class="mt-3 text-sm text-stone-600">
     No accounts. No server persistence. All preferences and vocabulary stay in your browser.
   </p>
 </section>

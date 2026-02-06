@@ -97,6 +97,59 @@ const matchVerb = (code) => {
   };
 };
 
+const definitions = {
+  ...Object.fromEntries(
+    Object.entries(POS_MAP).map(([key, value]) => [value, `${value} part of speech.`])
+  ),
+  ...Object.fromEntries(
+    Object.entries(POS_PREFIX_MAP).map(([key, value]) => [value, `${value} part of speech.`])
+  ),
+  Nominative: 'Usually the subject or predicate noun.',
+  Genitive: 'Often shows possession or source.',
+  Dative: 'Often indirect object or means/association.',
+  Accusative: 'Often direct object or extent.',
+  Vocative: 'Direct address.',
+  Singular: 'One.',
+  Plural: 'More than one.',
+  Masculine: 'Masculine grammatical gender.',
+  Feminine: 'Feminine grammatical gender.',
+  Neuter: 'Neuter grammatical gender.',
+  Present: 'Ongoing or habitual action, often unfolding in the present.',
+  Imperfect: 'Ongoing action in past time.',
+  Future: 'Action expected to occur in future time.',
+  Aorist: 'Action viewed as a whole, often a simple past.',
+  Perfect: 'Completed action with ongoing results.',
+  Pluperfect: 'Completed action in the past with ongoing results in the past.',
+  Active: 'The subject performs the action.',
+  Middle: 'The subject participates in or is affected by the action.',
+  Passive: 'The subject receives the action.',
+  'Middle or Passive': 'Form can be middle or passive; context clarifies.',
+  'Middle Deponent': 'Middle form with active meaning.',
+  'Passive Deponent': 'Passive form with active meaning.',
+  Indicative: 'States a fact or asks a question about reality.',
+  Subjunctive: 'Expresses possibility, purpose, or potential.',
+  Optative: 'Expresses wish or potential (rare in NT).',
+  Imperative: 'Gives a command or request.',
+  Infinitive: 'Verbal noun; the action as a concept.',
+  Participle: 'Verbal adjective; action describing a noun.',
+  'First person': 'Speaker(s).',
+  'Second person': 'Addressed person(s).',
+  'Third person': 'Person(s) spoken about.'
+};
+
+const buildExplanations = (pos, features) => {
+  const labels = [pos, ...(features ?? [])].filter(Boolean);
+  const seen = new Set();
+
+  return labels
+    .filter((label) => {
+      if (seen.has(label)) return false;
+      seen.add(label);
+      return definitions[label];
+    })
+    .map((label) => ({ label, definition: definitions[label] }));
+};
+
 export const parseMorphCode = (code) => {
   if (!code) return { raw: '' };
 
@@ -117,6 +170,7 @@ export const parseMorphCode = (code) => {
   return {
     pos,
     features: features.filter(Boolean),
-    raw: code
+    raw: code,
+    explanations: buildExplanations(pos, features)
   };
 };
