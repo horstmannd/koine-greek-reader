@@ -75,6 +75,8 @@
   $: pinnedToken = pinnedId ? tokenById[pinnedId] : null;
   $: hoveredLemma = hoveredToken ? lemmaById[hoveredToken.lemmaId] : null;
   $: pinnedLemma = pinnedToken ? lemmaById[pinnedToken.lemmaId] : null;
+  $: hoveredGloss = hoveredToken?.gloss?.trim() || null;
+  $: pinnedGloss = pinnedToken?.gloss?.trim() || null;
 </script>
 
 <section class="grid gap-8 lg:grid-cols-[2.5fr,1fr]">
@@ -145,7 +147,7 @@
         <div class="mt-4 space-y-2 text-sm">
           <p class="font-greek text-2xl text-stone-900">{hoveredToken.surface}</p>
           <p class="text-stone-600">Lemma: {hoveredLemma?.headword}</p>
-          <p class="text-stone-600">Gloss: {hoveredToken.gloss}</p>
+          <p class="text-stone-600">Gloss (short): {hoveredGloss ?? '—'}</p>
           <p class="text-stone-600">Parsing: {hoveredToken.morphCode}</p>
         </div>
       {:else}
@@ -159,7 +161,7 @@
         <div class="mt-4 space-y-3 text-sm">
           <p class="font-greek text-2xl text-stone-900">{pinnedToken.surface}</p>
           <p class="text-stone-700">Lemma: {pinnedLemma?.headword}</p>
-          <p class="text-stone-700">Gloss: {pinnedToken.gloss}</p>
+          <p class="text-stone-700">Gloss (short): {pinnedGloss ?? '—'}</p>
           <p class="text-stone-700">Parsing: {pinnedToken.morphCode}</p>
           <button
             class="mt-2 rounded-full bg-stone-900 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white"
@@ -192,7 +194,7 @@
               <div>
                 <p class="font-greek text-lg text-stone-900">{entry.surface}</p>
                 <p class="text-stone-600">{entry.headword}</p>
-                <p class="text-xs text-stone-500">{entry.gloss}</p>
+                <p class="text-xs text-stone-500">{entry.gloss || '—'}</p>
               </div>
               <button
                 class="text-xs uppercase tracking-widest text-rose-600"

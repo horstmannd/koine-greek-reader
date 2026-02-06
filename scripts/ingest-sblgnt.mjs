@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import yaml from 'yaml';
 
 const args = process.argv.slice(2);
 const argMap = new Map();
@@ -15,10 +16,11 @@ const inputPath = argMap.get('input');
 const book = argMap.get('book');
 const chapter = Number(argMap.get('chapter'));
 const format = argMap.get('format') ?? (inputPath?.endsWith('.txt') ? 'morphgnt' : 'json');
+const lexiconPath = argMap.get('lexicon');
 
 if (!inputPath || !book || Number.isNaN(chapter)) {
   console.error(
-    'Usage: node scripts/ingest-sblgnt.mjs --input data/raw/83-1Jn-morphgnt.txt --book 1john --chapter 1 --format morphgnt'
+    'Usage: node scripts/ingest-sblgnt.mjs --input data/raw/83-1Jn-morphgnt.txt --book 1john --chapter 1 --format morphgnt --lexicon data/raw/lexemes.yaml'
   );
   process.exit(1);
 }
@@ -143,6 +145,41 @@ const parseMorphgntLine = (line) => {
 };
 
 const rawText = await fs.readFile(inputPath, 'utf-8');
+let lexiconMap = new Map();
+
+const buildLexiconMap = (data) => {
+  const map = new Map();
+
+  if (Array.isArray(data)) {
+    for (const entry of data) {
+      if (!entry || typeof entry !== 'object') continue;
+      const key = entry.lexeme ?? entry.lemma ?? entry.id ?? entry.key;
+      const gloss = entry.gloss ?? entry.short_gloss ?? entry.glosses;
+      if (key && gloss) {
+        const value = Array.isArray(gloss) ? gloss[0] : gloss;
+        map.set(String(key), String(value));
+      }
+    }
+  } else if (data && typeof data === 'object') {
+    for (const [key, value] of Object.entries(data)) {
+      if (!value || typeof value !== 'object') continue;
+      const gloss = value.gloss ?? value.short_gloss ?? value.glosses;
+      if (gloss) {
+        const normalized = Array.isArray(gloss) ? gloss[0] : gloss;
+        map.set(String(key), String(normalized));
+      }
+    }
+  }
+
+  return map;
+};
+
+if (lexiconPath) {
+  const lexiconText = await fs.readFile(lexiconPath, 'utf-8');
+  const lexiconData = yaml.parse(lexiconText);
+  lexiconMap = buildLexiconMap(lexiconData);
+}
+
 let raw = [];
 
 if (format === 'morphgnt') {
@@ -168,13 +205,14 @@ for (const row of raw) {
 
   const tokenId = row.tokenId ?? tokenIdCounter++;
   const lemmaId = row.lemmaId ?? row.lemma;
+  const gloss = row.gloss ?? lexiconMap.get(row.lemma) ?? '';
 
   const token = {
     id: tokenId,
     surface: row.surface,
     lemmaId,
     morphCode: row.morph,
-    gloss: row.gloss ?? ''
+    gloss
   };
 
   tokens.push(token);
@@ -183,12 +221,12 @@ for (const row of raw) {
     lemmaMap.set(lemmaId, {
       id: lemmaId,
       headword: row.lemma,
-      glosses: row.gloss ? [row.gloss] : []
+      glosses: gloss ? [gloss] : []
     });
-  } else if (row.gloss) {
+  } else if (gloss) {
     const existing = lemmaMap.get(lemmaId);
-    if (!existing.glosses.includes(row.gloss)) {
-      existing.glosses.push(row.gloss);
+    if (!existing.glosses.includes(gloss)) {
+      existing.glosses.push(gloss);
     }
   }
 

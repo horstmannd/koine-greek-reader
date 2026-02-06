@@ -4,6 +4,7 @@ Place raw token data here. The ingestion script supports:
 
 1) MorphGNT SBLGNT text files (tab-separated, e.g. `83-1Jn-morphgnt.txt`)
 2) JSON arrays of token rows (custom)
+3) MorphGNT Morphological Lexicon (lexemes.yaml) for glosses
 
 For MorphGNT input:
 - Download `83-1Jn-morphgnt.txt` from the MorphGNT SBLGNT dataset
@@ -27,5 +28,6 @@ Run:
 
 ```bash
 npm run fetch:morphgnt -- --book 1john
-npm run ingest:sblgnt -- --input data/raw/83-1Jn-morphgnt.txt --book 1john --chapter 1 --format morphgnt
+npm run fetch:lexicon
+npm run ingest:sblgnt -- --input data/raw/83-1Jn-morphgnt.txt --book 1john --chapter 1 --format morphgnt --lexicon data/raw/lexemes.yaml
 ```
