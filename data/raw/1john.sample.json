@@ -1,0 +1,20 @@
+[
+  {
+    "book": "1john",
+    "chapter": 1,
+    "verse": 1,
+    "surface": "ὃ",
+    "lemma": "ὅς",
+    "morph": "R-NSN",
+    "gloss": "which"
+  },
+  {
+    "book": "1john",
+    "chapter": 1,
+    "verse": 1,
+    "surface": "ἦν",
+    "lemma": "εἰμί",
+    "morph": "V-IAI-3S",
+    "gloss": "was"
+  }
+]
